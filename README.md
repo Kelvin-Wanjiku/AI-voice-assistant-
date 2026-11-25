@@ -6,9 +6,24 @@ An AI companion for older adults that remembers what matters to them.
 
 ```
 milo/
-├── backend/    Python + FastAPI (AI logic, memory, tools, planner)
-└── frontend/   React + TypeScript (what the user sees)
+├── backend/                 Python + FastAPI (AI logic, memory, tools, planner)
+└── frontend/                React + TypeScript (what the user sees)
+    └── src/
+        ├── main.tsx         Starts the app
+        ├── App.tsx          The frame: menu + which screen to show
+        ├── types.ts         Shapes of Milo's data (plans, memories, messages)
+        ├── api.ts           Talks to the backend
+        ├── styles.css       All the styling
+        ├── screens/         One file per screen: Home, Chat, My day, About me
+        ├── components/      Pieces used on several screens (menu, icons, status)
+        ├── data/            Shared data store + sample data
+        └── utils/           Small helpers (dates and times)
 ```
+
+## Progress
+
+- Phase 1: foundation. Done.
+- Phase 2: four screens with navigation, using sample data. Done.
 
 ## Run it locally
 
@@ -35,7 +50,9 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173. You should see a greeting and three status rows.
+Open http://localhost:5173. You should see the Home screen and a menu with Home, Chat, My day and About me.
+
+After downloading a new phase, run `npm install` once in `frontend` before `npm run dev`, in case new packages were added.
 
 ## Connect the database (Supabase) - optional until Phase 4
 

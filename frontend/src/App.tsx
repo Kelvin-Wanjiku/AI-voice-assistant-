@@ -1,99 +1,46 @@
-import { useCallback, useEffect, useState } from "react";
-import { fetchHealth, type HealthResponse, type PartStatus } from "./api";
+import { useEffect, useRef } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import AboutMeScreen from "./screens/AboutMeScreen";
+import ChatScreen from "./screens/ChatScreen";
+import HomeScreen from "./screens/HomeScreen";
+import MyDayScreen from "./screens/MyDayScreen";
 
-function greeting(date = new Date()): string {
-  const hour = date.getHours();
-  if (hour < 12) return "Good morning";
-  if (hour < 18) return "Good afternoon";
-  return "Good evening";
-}
-
-const STATUS_LABEL: Record<PartStatus, string> = {
-  ok: "Working",
-  not_configured: "Not set up yet",
-  error: "Needs attention",
+const TITLES: Record<string, string> = {
+  "/": "Home",
+  "/chat": "Chat",
+  "/my-day": "My day",
+  "/about-me": "About me",
 };
-
-const STATUS_SYMBOL: Record<PartStatus, string> = {
-  ok: "✓",
-  not_configured: "–",
-  error: "!",
-};
-
-interface RowProps {
-  name: string;
-  status: PartStatus | "checking";
-  detail?: string;
-}
-
-function StatusRow({ name, status, detail }: RowProps) {
-  const label = status === "checking" ? "Checking…" : STATUS_LABEL[status];
-  const symbol = status === "checking" ? "…" : STATUS_SYMBOL[status];
-  return (
-    <li className={`row row--${status}`}>
-      <span className="row__symbol" aria-hidden="true">
-        {symbol}
-      </span>
-      <div>
-        <p className="row__name">{name}</p>
-        <p className="row__label">{label}</p>
-        {detail && <p className="row__detail">{detail}</p>}
-      </div>
-    </li>
-  );
-}
 
 export default function App() {
-  const [health, setHealth] = useState<HealthResponse | null>(null);
-  const [failed, setFailed] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { pathname } = useLocation();
+  const previousPath = useRef(pathname);
 
-  const check = useCallback(async () => {
-    setLoading(true);
-    setFailed(false);
-    try {
-      setHealth(await fetchHealth());
-    } catch {
-      setHealth(null);
-      setFailed(true);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
+  // When the screen changes: update the browser tab title, go back to the top,
+  // and move keyboard/screen-reader focus to the new screen's heading.
+  // (Not on the very first load, so the first Tab press still reaches the menu.)
   useEffect(() => {
-    check();
-  }, [check]);
-
-  const backendStatus: RowProps["status"] = loading ? "checking" : failed ? "error" : "ok";
-  const dbStatus: RowProps["status"] = loading || !health ? (failed ? "error" : "checking") : health.database.status;
+    document.title = `${TITLES[pathname] ?? "Milo"} · Milo`;
+    if (previousPath.current === pathname) return;
+    previousPath.current = pathname;
+    window.scrollTo(0, 0);
+    document.querySelector<HTMLElement>("main h1")?.focus();
+  }, [pathname]);
 
   return (
-    <main className="page">
-      <h1 className="hello">{greeting()}.</h1>
-      <p className="intro">Milo is getting ready. Here is what is working so far.</p>
-
-      <ul className="rows" aria-live="polite">
-        <StatusRow name="This app" status="ok" />
-        <StatusRow
-          name="Milo's backend"
-          status={backendStatus}
-          detail={
-            failed
-              ? "The backend is not answering. Start it with: uvicorn app.main:app --reload (inside the backend folder)."
-              : undefined
-          }
-        />
-        <StatusRow
-          name="Memory database"
-          status={dbStatus}
-          detail={failed ? "Needs the backend first." : health?.database.message}
-        />
-      </ul>
-
-      <button className="button" onClick={check} disabled={loading}>
-        {loading ? "Checking…" : "Check again"}
-      </button>
-    </main>
+    <div className="app">
+      <NavBar />
+      <main className="screen">
+        <Routes>
+          <Route path="/" element={<HomeScreen />} />
+          <Route path="/chat" element={<ChatScreen />} />
+          <Route path="/my-day" element={<MyDayScreen />} />
+          <Route path="/about-me" element={<AboutMeScreen />} />
+          {/* Any unknown address goes back to Home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </div>
   );
 }
