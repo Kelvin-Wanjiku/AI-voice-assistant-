@@ -1,0 +1,130 @@
+:root {
+  --bg: #f2f5f7;
+  --surface: #ffffff;
+  --ink: #16242c;
+  --ink-soft: #46565f;
+  --line: #c9d4da;
+  --accent: #0f5c63;
+  --accent-ink: #ffffff;
+  --ok: #17663f;
+  --warn: #7a5200;
+  --bad: #9b2222;
+
+  --font: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 125%; /* 20px base: comfortable for older eyes */
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.5;
+}
+
+.page {
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 3rem 1.25rem 4rem;
+}
+
+.hello {
+  font-size: 2.6rem;
+  line-height: 1.1;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.intro {
+  margin: 0 0 2rem;
+  color: var(--ink-soft);
+  max-width: 28rem;
+}
+
+.rows {
+  list-style: none;
+  margin: 0 0 2rem;
+  padding: 0;
+  background: var(--surface);
+  border: 2px solid var(--line);
+  border-radius: 0.75rem;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  padding: 1rem 1.25rem;
+}
+
+.row + .row {
+  border-top: 2px solid var(--line);
+}
+
+.row__symbol {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: #fff;
+  background: var(--ink-soft);
+}
+
+.row--ok .row__symbol { background: var(--ok); }
+.row--not_configured .row__symbol { background: var(--warn); }
+.row--error .row__symbol { background: var(--bad); }
+
+.row__name {
+  margin: 0;
+  font-weight: 700;
+}
+
+.row__label {
+  margin: 0;
+  color: var(--ink-soft);
+}
+
+.row__detail {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+.button {
+  font: inherit;
+  font-weight: 700;
+  min-height: 3.25rem;
+  padding: 0.5rem 1.75rem;
+  border: 0;
+  border-radius: 0.75rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.button:focus-visible {
+  outline: 4px solid var(--ink);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .button { transition: background-color 0.15s; }
+  .button:hover:not(:disabled) { background: #0b4a50; }
+}
