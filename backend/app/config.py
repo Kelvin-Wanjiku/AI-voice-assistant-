@@ -12,6 +12,12 @@ class Settings(BaseSettings):
     frontend_origin: str = "http://localhost:5173"
     database_url: str = ""
 
+    # Milo's brain. See llm.py for the providers you can choose from.
+    llm_provider: str = "groq"
+    llm_api_key: str = ""
+    llm_model: str = ""  # leave empty to use the provider's default model
+    llm_reasoning_effort: str = ""  # leave empty to use the provider's default
+
 
 @lru_cache
 def get_settings() -> Settings:

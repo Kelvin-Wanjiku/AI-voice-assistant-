@@ -2,19 +2,27 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useMilo } from "../data/MiloDataContext";
 
 export default function ChatScreen() {
-  const { messages, sendMessage } = useMilo();
+  const { messages, thinking, chatError, sendMessage, retryLastMessage } = useMilo();
   const [text, setText] = useState("");
   const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  // Keep the newest message in view.
+  // Keep the newest message (or the "thinking" line, or the error) in view.
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: "end" });
-  }, [messages]);
+  }, [messages, thinking, chatError]);
+
+  // When Milo has answered, put the cursor back in the box so the person can reply straight away.
+  const wasThinking = useRef(false);
+  useEffect(() => {
+    if (wasThinking.current && !thinking) inputRef.current?.focus({ preventScroll: true });
+    wasThinking.current = thinking;
+  }, [thinking]);
 
   const onSubmit = (event: FormEvent) => {
     event.preventDefault();
     const trimmed = text.trim();
-    if (!trimmed) return;
+    if (!trimmed || thinking) return;
     sendMessage(trimmed);
     setText("");
   };
@@ -30,6 +38,20 @@ export default function ChatScreen() {
             <p>{m.content}</p>
           </div>
         ))}
+
+        {thinking && (
+          <div className="bubble bubble--assistant bubble--thinking">
+            <span className="bubble__who">Milo</span>
+            <p>Thinking…</p>
+          </div>
+        )}
+
+        {chatError && !thinking && (
+          <div className="chat-error" role="alert">
+            <p>{chatError}</p>
+            <button className="button button--quiet" onClick={retryLastMessage}>Try again</button>
+          </div>
+        )}
         <div ref={endRef} />
       </section>
 
@@ -38,12 +60,14 @@ export default function ChatScreen() {
         <div className="composer__row">
           <input
             id="message"
+            ref={inputRef}
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Type to Milo…"
             autoComplete="off"
+            maxLength={2000}
           />
-          <button type="submit" className="button" disabled={!text.trim()}>
+          <button type="submit" className="button" disabled={!text.trim() || thinking}>
             Send
           </button>
         </div>

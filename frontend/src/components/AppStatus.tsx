@@ -32,6 +32,11 @@ export default function AppStatus() {
   }, [check]);
 
   const backend = loading ? "Checking…" : failed ? "Needs attention: start the backend" : "Working";
+  const ai = loading
+    ? "Checking…"
+    : failed || !health
+      ? "Needs the backend first"
+      : `${LABEL[health.ai.status]}${health.ai.message ? ` (${health.ai.message})` : ""}`;
   const database = loading
     ? "Checking…"
     : failed || !health
@@ -44,6 +49,7 @@ export default function AppStatus() {
       <ul aria-live="polite">
         <li><strong>This app:</strong> Working</li>
         <li><strong>Milo's backend:</strong> {backend}</li>
+        <li><strong>Milo's brain (AI):</strong> {ai}</li>
         <li><strong>Memory database:</strong> {database}</li>
       </ul>
       <button className="button button--quiet" onClick={check} disabled={loading}>

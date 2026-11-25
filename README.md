@@ -24,35 +24,22 @@ milo/
 
 - Phase 1: foundation. Done.
 - Phase 2: four screens with navigation, using sample data. Done.
+- Phase 3: Milo's AI brain. The Chat screen gets real replies. Done.
 
-## Run it locally
+## Milo's brain (Phase 3)
 
-You need **two terminals**, one for each half. Keep both open while you work.
+- `backend/app/personality.py`: who Milo is and how it talks. Edit this to change Milo's manner.
+- `backend/app/llm.py`: the only file that talks to the AI provider.
+- `backend/app/routes/chat.py`: the `/api/chat` address the Chat screen sends messages to.
 
-### Terminal 1: backend
+Milo works with several free AI providers. Choose one in `backend/.env`:
 
-```bash
-cd backend
-python3 -m venv .venv              # Windows: python -m venv .venv
-source .venv/bin/activate          # Windows PowerShell: .venv\Scripts\Activate.ps1
-pip install -r requirements.txt
-cp .env.example .env               # Windows: copy .env.example .env
-uvicorn app.main:app --reload
+```
+LLM_PROVIDER=groq          # or gemini, mistral, openrouter
+LLM_API_KEY=your-key-here
 ```
 
-Check it: open http://localhost:8000/api/health in your browser.
-
-### Terminal 2: frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Open http://localhost:5173. You should see the Home screen and a menu with Home, Chat, My day and About me.
-
-After downloading a new phase, run `npm install` once in `frontend` before `npm run dev`, in case new packages were added.
+Restart the backend after changing `.env`.
 
 ## Connect the database (Supabase) - optional until Phase 4
 

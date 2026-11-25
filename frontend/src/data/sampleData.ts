@@ -1,7 +1,7 @@
 // Pretend data so we can see and test the screens.
-// Phase 3 replaces the chat, Phase 4 the memories, Phase 6 the plans.
+// The chat is real since Phase 3. Phase 4 replaces the memories, Phase 5 the weather, Phase 6 the plans.
 
-import type { ChatMessage, Memory, PlanItem, Profile } from "../types";
+import type { Memory, PlanItem, Profile } from "../types";
 
 export const sampleProfile: Profile = { name: "Margaret" };
 
@@ -22,15 +22,8 @@ export const sampleMemories: Memory[] = [
   { id: "m7", category: "Goals", text: "Wants to be a little more active" },
 ];
 
-export const sampleMessages: ChatMessage[] = [
-  { id: "c1", role: "assistant", content: "Hello Margaret! How are you feeling today?" },
-  { id: "c2", role: "user", content: "Quite well, thank you. A bit tired." },
-  {
-    id: "c3",
-    role: "assistant",
-    content: "That's alright. Would a short walk after lunch help, or would you rather take it easy today?",
-  },
-];
+// Milo's opening line on the Chat screen. It is shown, but not sent to the AI.
+export const firstGreeting = "Hello! I'm Milo. What would you like to talk about today?";
 
 export const sampleWeather = { summary: "Light rain, clearing later", temperature: 9 };
 

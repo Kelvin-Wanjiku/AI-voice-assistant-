@@ -11,6 +11,7 @@
   --accent-ink: #ffffff;
   --idea: #fff6db;
   --idea-line: #e6cf86;
+  --bad: #9b2222;
 
   --font: "Atkinson Hyperlegible", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
   --radius: 0.75rem;
@@ -321,6 +322,29 @@ input:focus-visible {
   font-size: 0.8rem;
   font-weight: 700;
   color: var(--ink-soft);
+}
+
+.bubble--thinking p {
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+.chat-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border: 2px solid var(--bad);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--bad);
+  padding: 0.6rem 0.6rem 0.6rem 1rem;
+}
+
+.chat-error .button,
+.undo .button {
+  flex: none;
+  white-space: nowrap;
 }
 
 .composer__label {
