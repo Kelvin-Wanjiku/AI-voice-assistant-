@@ -16,3 +16,7 @@ dist/
 .DS_Store
 .idea/
 .vscode/
+
+# Milo's local memory database (personal data - never commit)
+backend/milo.db
+backend/milo.db-*

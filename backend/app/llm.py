@@ -11,7 +11,6 @@ from functools import lru_cache
 from openai import OpenAI
 
 from app.config import get_settings
-from app.personality import build_system_prompt
 
 
 @dataclass(frozen=True)
@@ -90,16 +89,19 @@ def get_client(base_url: str, api_key: str) -> OpenAI:
 THINKING_TAGS = re.compile(r"<think>.*?</think>", re.DOTALL)
 
 
-def ask_milo(messages: list[dict]) -> str:
-    """Send the conversation so far to the AI and return Milo's reply as plain text."""
+def complete(system: str, messages: list[dict], max_tokens: int = 1024) -> str:
+    """Send instructions plus a conversation to the AI and return its answer as plain text.
+
+    Used for Milo's replies (chat.py) and for deciding what to remember (memory_keeper.py).
+    """
     setup = current_setup()
     client = get_client(setup.provider.base_url, setup.api_key)
 
     extra = {"reasoning_effort": setup.reasoning_effort} if setup.reasoning_effort else {}
     response = client.chat.completions.create(
         model=setup.model,
-        messages=[{"role": "system", "content": build_system_prompt()}, *messages],
-        max_tokens=1024,  # room for the model's private thinking plus a short reply
+        messages=[{"role": "system", "content": system}, *messages],
+        max_tokens=max_tokens,  # room for the model's private thinking plus the answer
         **extra,
     )
     text = ""
@@ -107,3 +109,27 @@ def ask_milo(messages: list[dict]) -> str:
         text = response.choices[0].message.content or ""
     # Some models include their private reasoning in <think> tags; Milo should never say that out loud.
     return THINKING_TAGS.sub("", text).strip()
+
+
+def complete_or_choose_tools(system: str, messages: list[dict], tools: list[dict]) -> tuple[str, list[tuple[str, str]]]:
+    """Ask the AI to either answer straight away, or say which tools it wants to use first.
+
+    Returns (answer text, [(tool name, arguments as JSON text), ...]). Only one of the two is normally filled.
+    """
+    setup = current_setup()
+    client = get_client(setup.provider.base_url, setup.api_key)
+    extra = {"reasoning_effort": setup.reasoning_effort} if setup.reasoning_effort else {}
+    response = client.chat.completions.create(
+        model=setup.model,
+        messages=[{"role": "system", "content": system}, *messages],
+        tools=tools,
+        tool_choice="auto",
+        max_tokens=1024,
+        **extra,
+    )
+    if not response.choices:
+        return "", []
+    message = response.choices[0].message
+    calls = [(c.function.name, c.function.arguments or "{}") for c in (getattr(message, "tool_calls", None) or []) if c.function]
+    text = THINKING_TAGS.sub("", message.content or "").strip()
+    return text, calls

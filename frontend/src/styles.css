@@ -291,6 +291,42 @@ input:focus-visible {
   font-weight: 700;
 }
 
+.headlines {
+  list-style: none;
+  margin: 0.25rem 0 0.75rem;
+  padding: 0;
+}
+
+.headlines li {
+  padding: 0.5rem 0;
+}
+
+.headlines li + li {
+  border-top: 1px solid var(--line);
+}
+
+.headline__topic {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.headline__link {
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration-color: var(--line);
+}
+
+.headline__link:hover {
+  color: var(--accent);
+}
+
+.headline__link:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
 /* ============ Chat ============ */
 .chat {
   display: flex;
@@ -324,6 +360,14 @@ input:focus-visible {
   color: var(--ink-soft);
 }
 
+.turn--holding .bubble {
+  border-style: dashed;
+}
+
+.helper-panel {
+  margin-top: 2.5rem;
+}
+
 .bubble--thinking p {
   color: var(--ink-soft);
   font-style: italic;
@@ -345,6 +389,96 @@ input:focus-visible {
 .undo .button {
   flex: none;
   white-space: nowrap;
+}
+
+.turn {
+  display: flex;
+  flex-direction: column;
+}
+
+.turn--user {
+  align-items: flex-end;
+}
+
+.turn--assistant {
+  align-items: flex-start;
+}
+
+.notes {
+  list-style: none;
+  margin: 0.4rem 0 0;
+  padding: 0.5rem 0.9rem;
+  border-left: 4px solid var(--accent);
+  background: var(--accent-soft);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-size: 0.85rem;
+  max-width: 85%;
+}
+
+.note {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.note--undone {
+  color: var(--ink-soft);
+  text-decoration: line-through;
+}
+
+.note--hint a {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.link-button {
+  font: inherit;
+  font-weight: 700;
+  color: var(--accent);
+  background: none;
+  border: 0;
+  padding: 0.25rem 0.4rem;
+  min-height: 2.25rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.link-button:focus-visible,
+.note--hint a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.notes--lookup {
+  border-left-color: var(--ink-soft);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.note--lookup {
+  display: block;
+}
+
+.note__failed {
+  color: var(--bad);
+}
+
+.sources {
+  list-style: none;
+  margin: 0.15rem 0 0.25rem;
+  padding: 0;
+}
+
+.sources a {
+  color: var(--accent);
+}
+
+.sources a:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
 }
 
 .composer__label {
@@ -468,6 +602,152 @@ input:focus-visible {
   margin-top: 1rem;
 }
 
+.day-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .day-nav .button {
+    flex: 1;
+    padding: 0.4rem 0.5rem;
+  }
+}
+
+.day-heading {
+  font-size: 1.2rem;
+  margin-bottom: 1.25rem;
+}
+
+.day-heading span {
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+
+.plan__place {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.plan__meta {
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+}
+
+.plan__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: -0.4rem;
+}
+
+.plan__editing {
+  padding: 0.5rem;
+}
+
+.plan__editing .panel {
+  margin: 0;
+  border: 0;
+}
+
+.form-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.form-pair > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.form-hint {
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 640px) {
+  .form-pair {
+    grid-template-columns: 1fr;
+  }
+}
+
+.coming {
+  list-style: none;
+  margin: 0.25rem 0 0.75rem;
+  padding: 0;
+}
+
+.coming li {
+  padding: 0.35rem 0;
+}
+
+.coming__when {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.coming__what {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* ============ Reminder pop-up ============ */
+.reminder {
+  position: fixed;
+  top: 5.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(36rem, calc(100% - 2rem));
+  z-index: 30;
+  background: var(--surface);
+  border: 4px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.25rem;
+  box-shadow: 0 8px 30px rgba(22, 36, 44, 0.25);
+}
+
+.reminder__label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.reminder__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.reminder__when {
+  font-size: 1.1rem;
+  margin-bottom: 0.9rem;
+}
+
+.reminder__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.reminder__more {
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 640px) {
+  .reminder {
+    top: 1rem;
+  }
+}
+
 /* ============ About me ============ */
 .memory-group {
   margin-bottom: 1.5rem;
@@ -508,6 +788,93 @@ input:focus-visible {
   border-radius: var(--radius);
   padding: 0.6rem 0.6rem 0.6rem 1.25rem;
   margin-bottom: 1.5rem;
+}
+
+select {
+  font: inherit;
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 3rem;
+}
+
+select:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.name-form .panel__title {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.panel__note {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.form-message {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+.form-message--bad {
+  color: var(--bad);
+}
+
+.switch {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  min-height: 3rem;
+}
+
+.switch input {
+  width: 1.6rem;
+  height: 1.6rem;
+  min-height: 0;
+  flex: none;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.add-form + .danger-zone,
+.button + .danger-zone {
+  margin-top: 2.5rem;
+}
+
+.danger-zone {
+  margin-top: 2.5rem;
+}
+
+.panel--danger {
+  border-color: var(--bad);
+}
+
+.button--danger {
+  background: var(--bad);
+  border-color: var(--bad);
+}
+
+.button--danger:hover:not(:disabled) {
+  background: #7d1b1b;
+  border-color: #7d1b1b;
+}
+
+.button--danger-quiet {
+  color: var(--bad);
+  border-color: var(--bad);
+}
+
+.button--danger-quiet:hover:not(:disabled) {
+  background: #f8e5e5;
+  color: var(--bad);
 }
 
 /* ============ App status ============ */

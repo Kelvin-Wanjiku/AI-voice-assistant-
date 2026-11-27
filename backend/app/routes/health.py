@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.config import get_settings
 from app.db import check_database
 from app.llm import BrainNotConfigured, current_setup
+from app.tools import web_search
 
 router = APIRouter(tags=["health"])
 
@@ -25,4 +26,9 @@ def health() -> dict:
         "backend": {"status": "ok"},
         "ai": check_brain(),
         "database": {"status": db_status, "message": db_message},
+        "web_search": (
+            {"status": "ok", "message": "Tavily"}
+            if web_search.is_configured()
+            else {"status": "not_configured", "message": "Add TAVILY_API_KEY to backend/.env to let Milo search the web."}
+        ),
     }

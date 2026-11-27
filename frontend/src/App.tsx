@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import NavBar from "./components/NavBar";
+import ReminderBanner from "./components/ReminderBanner";
 import AboutMeScreen from "./screens/AboutMeScreen";
 import ChatScreen from "./screens/ChatScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -31,6 +32,7 @@ export default function App() {
   return (
     <div className="app">
       <NavBar />
+      <ReminderBanner />
       <main className="screen">
         <Routes>
           <Route path="/" element={<HomeScreen />} />
